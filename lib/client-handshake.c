@@ -246,6 +246,7 @@ lws_client_connect_2(struct lws *wsi)
 	}
 
 	lwsl_client("connected\n");
+	printf("connected\n");
 
 	/* we are connected to server, or proxy */
 
@@ -295,6 +296,7 @@ lws_client_connect_2(struct lws *wsi)
 	pfd.revents = LWS_POLLIN;
 
 	n = lws_service_fd(context, &pfd);
+	printf("Govind n %d", n);
 	if (n < 0)
 		goto failed;
 	if (n) /* returns 1 on failure after closing wsi */
