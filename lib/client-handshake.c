@@ -73,7 +73,7 @@ lws_client_connect_2(struct lws *wsi)
 			goto oom4;
 		}
 		if (result->ai_family != AF_INET6) {
-			context.options == LWS_SERVER_OPTION_DISABLE_IPV6;
+			context->options == LWS_SERVER_OPTION_DISABLE_IPV6;
 		}
 
 #ifdef LWS_USE_IPV6
@@ -94,10 +94,7 @@ lws_client_connect_2(struct lws *wsi)
 		}
 
 		server_addr6.sin6_family = AF_INET6;
-		if (result->ai_family != AF_INET6) {
-			context.options == LWS_SERVER_OPTION_DISABLE_IPV6;
-		}
-		printf("Govind got family %d", result->ai_family);
+		printf("Govind got family %d, %d", result->ai_family, AF_INET6);
 		switch (result->ai_family) {
 #if defined(__ANDROID__)
 		case AF_INET:
