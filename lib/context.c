@@ -20,6 +20,9 @@
  */
 
 #include "private-libwebsockets.h"
+#include <execinfo.h>
+#include <stdio.h>
+#include <stdlib.h>
 
 #ifndef LWS_BUILD_HASH
 #define LWS_BUILD_HASH "unknown-build-hash"
@@ -241,6 +244,25 @@ bail:
 	return NULL;
 }
 
+/* Obtain a backtrace and print it to stdout. */
+void print_trace (void)
+{
+  void *array[10];
+  size_t size;
+  char **strings;
+  size_t i;
+
+  size = backtrace (array, 10);
+  strings = backtrace_symbols (array, size);
+
+  printf ("Obtained %zd stack frames.\n", size);
+
+  for (i = 0; i < size; i++)
+     printf ("%s\n", strings[i]);
+
+  free (strings);
+}
+
 /**
  * lws_context_destroy() - Destroy the websocket context
  * @context:	Websocket context
@@ -255,7 +277,7 @@ lws_context_destroy(struct lws_context *context)
 	const struct lws_protocols *protocol = NULL;
 	struct lws wsi;
 	int n;
-
+	print_trace();
 	lwsl_notice("%s\n", __func__);
 
 	if (!context)
