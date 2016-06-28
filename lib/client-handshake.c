@@ -79,6 +79,7 @@ lws_client_connect_2(struct lws *wsi)
 		}
 
 		server_addr6.sin6_family = AF_INET6;
+		printf("Govind got family %d", result->ai_family);
 		switch (result->ai_family) {
 #if defined(__ANDROID__)
 		case AF_INET:
@@ -150,12 +151,12 @@ lws_client_connect_2(struct lws *wsi)
 			wsi->sock = socket(AF_INET, SOCK_STREAM, 0);
 
 		if (!lws_socket_is_valid(wsi->sock)) {
-			lwsl_warn("Unable to open socket\n");
+			lwsl_notice("Unable to open socket\n");
 			goto oom4;
 		}
 
 		if (lws_plat_set_socket_options(context, wsi->sock)) {
-			lwsl_err("Failed to set wsi socket options\n");
+			lwsl_notice("Failed to set wsi socket options\n");
 			compatible_close(wsi->sock);
 			goto oom4;
 		}
@@ -226,7 +227,7 @@ lws_client_connect_2(struct lws *wsi)
 			|| LWS_ERRNO == WSAEINVAL
 #endif
 		) {
-			lwsl_client("nonblocking connect retry\n");
+			lwsl_notice("nonblocking connect retry\n");
 
 			/*
 			 * must do specifically a POLLOUT poll to hear
@@ -240,7 +241,7 @@ lws_client_connect_2(struct lws *wsi)
 		}
 
 		if (LWS_ERRNO != LWS_EISCONN) {
-			lwsl_debug("Connect failed errno=%d\n", LWS_ERRNO);
+			lwsl_notice("Connect failed errno=%d\n", LWS_ERRNO);
 			goto failed;
 		}
 	}
