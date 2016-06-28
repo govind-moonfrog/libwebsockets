@@ -60,6 +60,21 @@ lws_client_connect_2(struct lws *wsi)
 	 * prepare the actual connection (to the proxy, if any)
 	 */
        lwsl_client("%s: address %s\n", __func__, ads);
+       memset(&hints, 0, sizeof(struct addrinfo));
+		hints.ai_family = AF_INET6;
+		hints.ai_flags = AI_V4MAPPED;
+		n = getaddrinfo(ads, NULL, &hints, &result);
+		if (n) {
+#ifdef _WIN32
+			lwsl_err("getaddrinfo: %ls\n", gai_strerrorW(n));
+#else
+			lwsl_err("getaddrinfo: %s\n", gai_strerror(n));
+#endif
+			goto oom4;
+		}
+		if (result->ai_family != AF_INET6) {
+			context.options == LWS_SERVER_OPTION_DISABLE_IPV6;
+		}
 
 #ifdef LWS_USE_IPV6
 	if (LWS_IPV6_ENABLED(context)) {
@@ -79,6 +94,9 @@ lws_client_connect_2(struct lws *wsi)
 		}
 
 		server_addr6.sin6_family = AF_INET6;
+		if (result->ai_family != AF_INET6) {
+			context.options == LWS_SERVER_OPTION_DISABLE_IPV6;
+		}
 		printf("Govind got family %d", result->ai_family);
 		switch (result->ai_family) {
 #if defined(__ANDROID__)
